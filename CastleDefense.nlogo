@@ -12,7 +12,7 @@
 ;variables are explained in the function comments.
 globals [gold level-active level? mouse-state? level timer1 time-a advance? advance-level defeat? block-defeat?]
 ;
-turtles-own [health strength speed range enemy? turn-status corner-verify target original-shape next-shape shape2 fight-active? battle-ani? building? defense? gold-drop]
+turtles-own [health strength speed range2 enemy? turn-status corner-verify target original-shape next-shape shape2 fight-active? battle-ani? building? defense? gold-drop]
 patches-own [ original-color next-color horzo-r? horzo-l? vertico? spec-pos]
 breed [towers tower]
 breed [castles castle]
@@ -223,14 +223,14 @@ end
 
 ; started before 1/11, this is the same for the subsequent enemy spawning related functions, therefore I will only have comments on this one
 ;Mohtasim Howlader
-; 1.13.17 added enemy?, added health, range, color, size
+; 1.13.17 added enemy?, added health, range2, color, size
 ; 1.14.17 added original-shape, shape2, set-default-shape
 ; 1.15.17 removed set-default shape, reworked health, speed, strength, added heading, added label for health
 ; 1.16.17 reworked health and strength, and speed
 
 ;Talal Ishrak
 ; 1.14.17 added speed, gold-drop,l
-; 1.15.17 reworked speed, gold-drop, strength, health, speed, and range
+; 1.15.17 reworked speed, gold-drop, strength, health, speed, and range2
 
 to set-goblin-stats
   set original-shape "goblinz"
@@ -243,7 +243,7 @@ to set-goblin-stats
   set enemy? true
   set strength 2
   set health 200
-  set range 5
+  set range2 5
   set speed 0.4
   set gold-drop 50
 
@@ -275,7 +275,7 @@ to set-giant-stats
   set strength 5
   set health 1000
   set speed 0.25
-  set range 5
+  set range2 5
   set gold-drop 200
     ;set speed-attack
 
@@ -307,7 +307,7 @@ to set-dragon-stats
   set strength 15
   set health 2000
   set speed 0.15
-  set range 13
+  set range2 13
   set gold-drop 1000
   ;set speed-attack
 
@@ -339,7 +339,7 @@ to set-golem-stats
   set strength 10
   set health 1000
   set speed 0.25
-  set range 5
+  set range2 5
   set gold-drop 300
   ;set speed-attack
 
@@ -371,7 +371,7 @@ to set-witch-stats
   set strength 2
   set health 450
   set speed 0.3
-  set range 15
+  set range2 15
   set gold-drop 150
   ;set speed-attack
 
@@ -417,14 +417,14 @@ end
 
 ; started before 1/11, this is the same for the subsequent defense spawning related functions, therefore I will only have comments on this one
 ;Mohtasim Howlader
-; 1.13.17 added enemy?, added health, range, color, size
+; 1.13.17 added enemy?, added health, range2, color, size
 ; 1.14.17 added original-shape, shape2, set-default-shape
 ; 1.15.17 removed set-default shape, reworked health, speed, strength, added heading, added label for health
 ; 1.16.17 reworked health and strength, and speed
 
 ;Talal Ishrak
-; 1.14.17 added speed, reworked cost and range
-; 1.15.17 reworked speed, gold-drop, strength, health, speed, and range
+; 1.14.17 added speed, reworked cost and range2
+; 1.15.17 reworked speed, gold-drop, strength, health, speed, and range2
 to set-soldier-stats
   set original-shape "soldier"
   set shape original-shape
@@ -435,9 +435,9 @@ to set-soldier-stats
   set defense? true
   set strength 3
   set health 250
-  set range 5
+  set range2 5
   set speed 0.35
-  ;set range
+  ;set range2
   ;set speed
   ;set speed-atack
 
@@ -474,7 +474,7 @@ to set-horseman-stats
   set defense? true
   set strength 5
   set health 500
-  set range 5
+  set range2 5
   set speed 1
   ;set speed-attack
 
@@ -512,7 +512,7 @@ to set-archer-stats
   set health 150
   set speed 0.2
   ;set speed-attack
-  set range 15
+  set range2 15
 
 end
 
@@ -546,7 +546,7 @@ to set-sorcerer-stats
   set enemy? false
   set defense? true
   set health 500
-  set range 15
+  set range2 15
   set speed 0.2
 
 end
@@ -851,12 +851,12 @@ end
 to enemy-stop
   ask turtles with [enemy? = true]
   [
-    ifelse any? turtles with [enemy? = false] in-cone range 180 or any? towers in-cone (range + 3) 180 or any? castles in-cone (range + 14) 180
+    ifelse any? turtles with [enemy? = false] in-cone range2 180 or any? towers in-cone (range2 + 3) 180 or any? castles in-cone (range2 + 14) 180
       [
-        if any? turtles with [enemy? = false] in-cone range 180
+        if any? turtles with [enemy? = false] in-cone range2 180
         [
           set fight-active? true
-          set target [who] of min-one-of turtles in-cone range 180 with [enemy? = false] [distance myself]
+          set target [who] of min-one-of turtles in-cone range2 180 with [enemy? = false] [distance myself]
           let x target
 
           if any? turtles with [who = x]
@@ -868,12 +868,12 @@ to enemy-stop
              set battle-ani? true
           ]
         ]
-        if any? turtles with [building? = true] in-cone (range + 3) 180
+        if any? turtles with [building? = true] in-cone (range2 + 3) 180
         [
-          set target [who] of min-one-of towers in-cone (range + 3) 180  [distance myself]
+          set target [who] of min-one-of towers in-cone (range2 + 3) 180  [distance myself]
 
           set fight-active? true
-          set target [who] of min-one-of towers in-cone (range + 3) 180 [distance myself]
+          set target [who] of min-one-of towers in-cone (range2 + 3) 180 [distance myself]
           let x target
 
           if any? turtles with [who = x]
@@ -885,12 +885,12 @@ to enemy-stop
             set battle-ani? true
           ]
         ]
-        if any? castles in-cone (range + 14) 180
+        if any? castles in-cone (range2 + 14) 180
         [
-          set target [who] of min-one-of castles in-cone (range + 14) 180 [distance myself]
+          set target [who] of min-one-of castles in-cone (range2 + 14) 180 [distance myself]
 
           set fight-active? true
-          set target [who] of min-one-of castles in-cone (range + 14) 180 [distance myself]
+          set target [who] of min-one-of castles in-cone (range2 + 14) 180 [distance myself]
           let x target
 
           if any? turtles with [who = x]
@@ -937,10 +937,10 @@ end
 to defense-stop
   ask turtles with [enemy? = false]
   [
-    ifelse any? turtles with [enemy? = true] in-radius range
+    ifelse any? turtles with [enemy? = true] in-radius range2
     [
       set fight-active? true
-      set target [who] of min-one-of turtles in-radius range with [enemy? = true] [distance myself]
+      set target [who] of min-one-of turtles in-radius range2 with [enemy? = true] [distance myself]
       let x target
 
       if any? turtles with [who = x]
@@ -1239,15 +1239,14 @@ end
 
 
 
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 233
 10
-1089
-707
-70
-55
+1087
+685
+-1
+-1
 6.0
 1
 10
@@ -2216,9 +2215,8 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
-
 @#$#@#$#@
-NetLogo 5.3.1
+NetLogo 6.2.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -2234,7 +2232,6 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
-
 @#$#@#$#@
 0
 @#$#@#$#@
